@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+
+int main(void){
+int arr[6]={2,5,77,6,18,45};
+int max=arr[0];
+for(int i=1;i<6;i++){
+if(max<arr[i]){
+max=arr[i];
+}
+}
+printf("%d",max);
+return 0;
+}
