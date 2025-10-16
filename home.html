@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+
+
+  apiKey: "AIzaSyDRQFtGnbQFybV3bgmj5eaLlplBBdKqtY0",
+  authDomain: "nnnn-d4604.firebaseapp.com",
+  projectId: "nnnn-d4604",
+  storageBucket: "nnnn-d4604.firebasestorage.app",
+  messagingSenderId: "172990162335",
+  appId: "1:172990162335:web:3a742eb905314ff288c9aa"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    });
+
+    // Redirect to login if not signed in
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Home Page 🎉</h2>
+    <button id="logoutBtn">Logout</button>
+  </div>
+</body>
+</html>
+
