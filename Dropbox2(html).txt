@@ -1,0 +1,80 @@
+index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dropbox File Upload & Download</title>
+</head>
+<body>
+    <h2>Upload File to Dropbox</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">Upload to Dropbox</button>
+    <p id="uploadStatus"></p>
+
+    <hr />
+
+    <h2>Download File from Dropbox</h2>
+    <input type="text" id="filenameInput" placeholder="Enter Dropbox filename (e.g. photo.jpg)" />
+    <button onclick="downloadFile()">Download from Dropbox</button>
+    <p id="downloadStatus"></p>
+
+    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+    <script>
+        const ACCESS_TOKEN = " "; 
+        const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const status = document.getElementById('uploadStatus');
+
+            if (!file) {
+                status.textContent = "Please select a file first.";
+                return;
+            }
+
+            const dropboxPath = '/' + file.name;
+
+            dbx.filesUpload({ path: dropboxPath, contents: file })
+                .then(response => {
+                    status.textContent = "File uploaded successfully!";
+                    console.log(response);
+                })
+                .catch(error => {
+                    status.textContent = "Error uploading file.";
+                    console.error(error);
+                });
+        }
+
+        function downloadFile() {
+            const filename = document.getElementById('filenameInput').value.trim();
+            const status = document.getElementById('downloadStatus');
+
+            if (!filename) {
+                status.textContent = "Please enter a file name.";
+                return;
+            }
+
+            const path = '/' + filename;
+
+            dbx.filesDownload({ path: path })
+                .then(response => {
+                    const blob = response.result.fileBlob;
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    status.textContent = "File downloaded.";
+                })
+                .catch(error => {
+                    status.textContent = "Error downloading file.";
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>
